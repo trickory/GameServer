@@ -511,6 +511,7 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
                 if (cKiller == null)
                     return;
 
+                cKiller.CreepScore++;
                 float gold = _game.Map.GetGoldFor(this);
                 if (gold <= 0)
                     return;

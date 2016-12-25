@@ -19,6 +19,11 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
         public Dictionary<short, Spell> Spells { get; private set; }
         public List<string> ExtraSpells { get; private set; }
 
+        public int Kills { get; set; }
+        public int Deaths { get; set; }
+        public int Assists { get; set; }
+        public int CreepScore { get; set; }
+
         private short _skillPoints;
         public int Skin { get; set; }
         private float _championHitFlagTimer;
@@ -39,6 +44,10 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
             _playerId = playerId;
             _playerTeamSpecialId = playerTeamSpecialId;
             RuneList = runeList;
+
+            Kills = 0;
+            Deaths = 0;
+            Assists = 0;
 
             Inventory = InventoryManager.CreateInventory(this);
             Shop = Shop.CreateShop(this);
@@ -437,6 +446,7 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
 
         public override void die(Unit killer)
         {
+            Deaths++;
             RespawnTimer = 5000 + GetStats().Level * 2500;
             _game.Map.StopTargeting(this);
 
@@ -454,6 +464,7 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
                 return;
             }
 
+            cKiller.Kills++;
             cKiller.ChampionGoldFromMinions = 0;
 
             float gold = _game.Map.GetGoldFor(this);

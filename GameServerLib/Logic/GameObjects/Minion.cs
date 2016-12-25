@@ -145,6 +145,9 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
                 return;
             }
 
+            List<Vector2> newWaypoints = new List<Vector2> { new Vector2(X, Y), mainWaypoints[curMainWaypoint] };
+            SetWaypoints(newWaypoints);
+
             base.onCollision(collider);
         }
 

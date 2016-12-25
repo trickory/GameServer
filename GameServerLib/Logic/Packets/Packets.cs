@@ -2026,6 +2026,69 @@ namespace LeagueSandbox.GameServer.Logic.Packets
         }
     }
 
+    public class ScoreboardInfo : BasePacket
+    {
+        public ScoreboardInfo(Champion player) : base(PacketCmd.PKT_S2C_Scoreboard, player.NetId)
+        {
+            buffer.Write(0x30);
+            buffer.Write(0x01);
+            buffer.Write(0x00);
+            buffer.Write(0x00);
+            buffer.Write((int)player.Assists); // most likely team assists
+            buffer.Write((int)0);
+            buffer.Write((int)player.Kills); // most likely team kills
+            buffer.Write((int)2); // ?
+            buffer.Write((int)0);
+            buffer.Write((int)0);
+            buffer.Write((int)0);
+            buffer.Write((int)0);
+            buffer.Write((int)0);
+            buffer.Write(0x99);
+            buffer.Write(0xCF);
+            buffer.Write(0xC0);
+            buffer.Write(0x45);
+            buffer.Write(0x00);
+            buffer.Write(0x28);
+            buffer.Write(0xAF);
+            buffer.Write(0x45);
+            buffer.fill(0, 36);
+            buffer.Write((int)15); //not sure if it is an int
+            buffer.Write((int)0);
+            buffer.Write(0x0F);
+            buffer.Write(0xEA);
+            buffer.Write(0x64);
+            buffer.Write(0x43);
+            buffer.Write((int)0);
+            buffer.Write((int)1); //probably playerId
+            buffer.Write((int)0);
+            buffer.Write(0x24);
+            buffer.Write(0xB3);
+            buffer.Write(0xA7);
+            buffer.Write(0x43);
+            buffer.Write(0x2E);
+            buffer.Write(0x14);
+            buffer.Write(0xE8);
+            buffer.Write(0x44);
+            buffer.Write(0xAE);
+            buffer.Write(0xEF);
+            buffer.Write(0xEA);
+            buffer.Write(0x43);
+            buffer.Write(0xA7);
+            buffer.Write(0xAC);
+            buffer.Write(0xAB);
+            buffer.Write(0x44);
+            buffer.Write((int)player.CreepScore);
+            buffer.Write((short)0);
+            buffer.Write((int)0); // <- ?!? this value + CreepScore shows at top right score
+            buffer.Write((int)2);
+            buffer.Write((int)0);
+            buffer.Write((int)0);
+            buffer.Write((int)player.Deaths);
+            buffer.Write((int)0);
+            buffer.fill(0, 148);
+        }
+    }
+
     public class AttentionPing
     {
         public byte cmd;
