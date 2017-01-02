@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Ninject;
 using LeagueSandbox.GameServer.Logic.Content;
 using LeagueSandbox.GameServer.Logic;

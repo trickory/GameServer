@@ -162,11 +162,14 @@
 
     public enum MoveType : uint
     {
-        EMOTE = 1,
-        MOVE = 2,
-        ATTACK = 3,
-        ATTACKMOVE = 7,
-        STOP = 10,
+        HoldPosition = 1,
+        MoveTo = 2,
+        AttackUnit = 3,
+        AutoAttackPet = 4,
+        AutoAttack = 5,
+        MovePet = 6,
+        AttackTo = 7,
+        Stop = 10
     }
 
     public enum ChatType : uint

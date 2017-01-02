@@ -1,5 +1,5 @@
 ﻿using LeagueSandbox.GameServer.Logic.Content;
-using LeagueSandbox.GameServer.Logic.GameObjects;
+using LeagueSandbox.GameServer.GameObjects;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ namespace LeagueSandbox.GameServer.Logic.Items
     public class InventoryManager
     {
         private Inventory _inventory;
-        private Unit _owner;
+        private Obj_AI_Base _owner;
 
-        private InventoryManager(Unit owner)
+        private InventoryManager(Obj_AI_Base owner)
         {
             _inventory = new Inventory(this);
         }
@@ -65,7 +65,7 @@ namespace LeagueSandbox.GameServer.Logic.Items
             return result;
         }
 
-        public static InventoryManager CreateInventory(Unit owner)
+        public static InventoryManager CreateInventory(Obj_AI_Base owner)
         {
             return new InventoryManager(owner);
         }

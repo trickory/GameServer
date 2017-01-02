@@ -1,6 +1,7 @@
 ﻿using LeagueSandbox.GameServer.Core.Logic.PacketHandlers;
 using LeagueSandbox.GameServer.Logic.GameObjects;
 using ENet;
+using LeagueSandbox.GameServer.GameObjects;
 
 namespace LeagueSandbox.GameServer.Logic.Enet
 {
@@ -15,23 +16,23 @@ namespace LeagueSandbox.GameServer.Logic.Enet
         public string  Rank { get; private set; }
         public short Ribbon { get; private set; }
         public int Icon { get; private set; }
-        public TeamId Team { get; private set; }
+        public Team Team { get; private set; }
 
-        private Champion _champion;
-        public Champion Champion
+        private Obj_AI_Hero _champion;
+        public Obj_AI_Hero Champion
         {
             get { return _champion; }
             set
             {
                 this._champion = value;
-                _champion.Skin = SkinNo;
+                _champion.SkinId = SkinNo;
             }
         }
 
         public Peer Peer { get; set; }
 
         public ClientInfo(string rank,
-                          TeamId team,
+                          Team team,
                           short ribbon,
                           int icon,
                           int skinNo,
@@ -50,11 +51,5 @@ namespace LeagueSandbox.GameServer.Logic.Enet
             SummonerSkills = summonerSkills;
             UserId = userId;
         }
-    }
-    public enum TeamId
-    {
-        TEAM_BLUE = 0x64,
-        TEAM_PURPLE = 0xC8,
-        TEAM_NEUTRAL = 0x12C
     }
 }

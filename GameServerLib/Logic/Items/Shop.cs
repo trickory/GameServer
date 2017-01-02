@@ -1,13 +1,14 @@
-﻿using LeagueSandbox.GameServer.Logic.GameObjects;
+﻿using LeagueSandbox.GameServer.GameObjects;
+using LeagueSandbox.GameServer.Logic.GameObjects;
 
 namespace LeagueSandbox.GameServer.Logic.Items
 {
     public class Shop
     {
-        private Unit _owner;
+        private Obj_AI_Base _owner;
         private InventoryManager _inventory;
 
-        private Shop(Unit owner)
+        private Shop(Obj_AI_Base owner)
         {
             _owner = owner;
             _inventory = _owner.Inventory;
@@ -62,7 +63,7 @@ namespace LeagueSandbox.GameServer.Logic.Items
         //    return true;
         //}
 
-        public static Shop CreateShop(Champion owner)
+        public static Shop CreateShop(Obj_AI_Hero owner)
         {
             return new Shop(owner);
         }

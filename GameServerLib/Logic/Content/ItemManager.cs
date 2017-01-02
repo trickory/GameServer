@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LeagueSandbox.GameServer.Logic.Items;
+using LeagueSandbox.GameServer.GameObjects;
 
 namespace LeagueSandbox.GameServer.Logic.Content
 {
@@ -48,7 +49,7 @@ namespace LeagueSandbox.GameServer.Logic.Content
         }
     }
 
-    public class ItemType : IBuff
+    public class ItemType : BuffInstance
     {
         private ItemManager _owner;
         private ItemContentCollectionEntry _itemInfo;

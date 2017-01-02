@@ -441,12 +441,12 @@ namespace LeagueSandbox.GameServer.Logic.RAF
             return getY(argX, argY) > -254.0f;
         }
 
-        public float castRay(Vector2 origin, Vector2 destination, bool inverseRay = false)
+        public float castRay(Vector3 origin, Vector3 destination, bool inverseRay = false)
         {
             return (float)Math.Sqrt(castRaySqr(origin, destination, inverseRay));
 
         }
-        public float castRaySqr(Vector2 origin, Vector2 destination, bool inverseRay = false)
+        public float castRaySqr(Vector3 origin, Vector3 destination, bool inverseRay = false)
         {
             var x1 = origin.X;
             var y1 = origin.Y;
@@ -479,29 +479,29 @@ namespace LeagueSandbox.GameServer.Logic.RAF
 
             if (i == il)
             {
-                return (/*TranslateToRealCoordinate*/new Vector2(x2, y2) - /*TranslateToRealCoordinate*/origin).SqrLength();
+                return (/*TranslateToRealCoordinate*/new Vector3(x2, y2, 0) - /*TranslateToRealCoordinate*/origin).LengthSquared();
             }
 
-            return (/*TranslateToRealCoordinate*/new Vector2(x1, y1) - /*TranslateToRealCoordinate*/origin).SqrLength();
+            return (/*TranslateToRealCoordinate*/new Vector3(x1, y1, 0) - /*TranslateToRealCoordinate*/origin).LengthSquared();
         }
 
-        public float castInfiniteRaySqr(Vector2 origin, Vector2 direction, bool inverseRay = false)
+        public float castInfiniteRaySqr(Vector3 origin, Vector3 direction, bool inverseRay = false)
         {
             return castRaySqr(origin, origin + direction * AIMESH_TEXTURE_SIZE, inverseRay);
         }
-        public float castInfiniteRay(Vector2 origin, Vector2 direction, bool inverseRay = false)
+        public float castInfiniteRay(Vector3 origin, Vector3 direction, bool inverseRay = false)
         {
             return (float)Math.Sqrt(castInfiniteRaySqr(origin, direction, inverseRay));
         }
-        public bool isAnythingBetween(Vector2 a, Vector2 b)
+        public bool isAnythingBetween(Vector3 a, Vector3 b)
         {
-            return castRaySqr(a, b) <= (b - a).SqrLength();
+            return castRaySqr(a, b) <= (b - a).LengthSquared();
         }
         public bool isAnythingBetween(GameObject a, GameObject b)
         {
-            return castRaySqr(a.GetPosition(), b.GetPosition()) <= (b.GetPosition() - a.GetPosition()).SqrLength();
+            return castRaySqr(a.Position, b.Position) <= (b.Position - a.Position).LengthSquared();
         }
-        public Vector2 getClosestTerrainExit(Vector2 location)
+        public Vector3 getClosestTerrainExit(Vector3 location)
         {
             if (isWalkable(location.X, location.Y))
             {
@@ -525,7 +525,7 @@ namespace LeagueSandbox.GameServer.Logic.RAF
                 r += 0.1f;
             }
 
-            return new Vector2((float)trueX, (float)trueY);
+            return new Vector3((float)trueX, (float)trueY, 0);
         }
 
         public float getWidth()
@@ -543,7 +543,7 @@ namespace LeagueSandbox.GameServer.Logic.RAF
             return mapHeight > mapWidth ? mapHeight : mapWidth;
         }
 
-        public Vector2 TranslateToTextureCoordinate(Vector2 vector)
+        public Vector3 TranslateToTextureCoordinate(Vector3 vector)
         {
             if (loaded)
             {
@@ -553,7 +553,7 @@ namespace LeagueSandbox.GameServer.Logic.RAF
 
             return vector;
         }
-        public Vector2 TranslateToRealCoordinate(Vector2 vector)
+        public Vector3 TranslateToRealCoordinate(Vector3 vector)
         {
             if (loaded)
             {

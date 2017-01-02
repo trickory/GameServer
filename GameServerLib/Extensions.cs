@@ -9,6 +9,8 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using LeagueSandbox.GameServer.Logic.Players;
+using LeagueSandbox.GameServer.GameObjects;
+using LeagueSandbox.GameServer.Core.Logic;
 
 namespace LeagueSandbox.GameServer
 {
@@ -17,6 +19,59 @@ namespace LeagueSandbox.GameServer
         public static float SqrLength(this Vector2 v)
         {
             return v.X * v.X + v.Y * v.Y;
+        }
+
+        public static Vector3 GetSpawnPosition(Obj_AI_Base obj)
+        {
+            var _game = Program.ResolveDependency<Game>();
+            var config = _game.Config;
+            var playerIndex = $"player{obj.Index}";
+            var playerTeam = "";
+            var teamSize = config.GetTeamSize(playerIndex);
+
+            if (teamSize > 6) //???
+                teamSize = 6;
+
+            if (config.Players.ContainsKey(playerIndex))
+            {
+                var p = config.Players[playerIndex];
+                playerTeam = p.Team;
+            }
+
+            var spawnsByTeam = new Dictionary<Team, Dictionary<int, PlayerSpawns>>
+            {
+                {Team.Order, config.MapSpawns.Blue},
+                {Team.Chaos, config.MapSpawns.Purple}
+            };
+
+            var spawns = spawnsByTeam[obj.Team];
+            return spawns[1].GetCoordsForPlayer(1);
+        }
+
+        public static int GetChampionHash(Obj_AI_Base obj)
+        {
+            var szSkin = "";
+
+            if (obj.SkinId < 10)
+                szSkin = "0" + obj.SkinId;
+            else
+                szSkin = obj.SkinId.ToString();
+
+            int hash = 0;
+            var gobj = "[Character]";
+            for (var i = 0; i < gobj.Length; i++)
+            {
+                hash = Char.ToLower(gobj[i]) + (0x1003F * hash);
+            }
+            for (var i = 0; i < obj.Model.Length; i++)
+            {
+                hash = Char.ToLower(obj.Model[i]) + (0x1003F * hash);
+            }
+            for (var i = 0; i < szSkin.Length; i++)
+            {
+                hash = Char.ToLower(szSkin[i]) + (0x1003F * hash);
+            }
+            return hash;
         }
 
         public static long ElapsedNanoSeconds(this Stopwatch watch)
@@ -45,6 +100,26 @@ namespace LeagueSandbox.GameServer
             {
                 list.Write(data);
             }
+        }
+
+        public static float GetDistanceTo(GameObject from, GameObject to)
+        {
+            return GetDistanceTo(from.Position.X, from.Position.Y, to.Position.X, to.Position.Y);
+        }
+
+        public static float GetDistanceTo(float xfrom, float yfrom, float xto, float yto)
+        {
+            return (float)Math.Sqrt(GetDistanceToSqr(xfrom, yfrom, xto, yto));
+        }
+
+        public static float GetDistanceToSqr(GameObject from, GameObject to)
+        {
+            return GetDistanceToSqr(from.Position.X, from.Position.Y, to.Position.X, to.Position.Y);
+        }
+
+        public static float GetDistanceToSqr(float xfrom, float yfrom, float xto, float yto)
+        {
+            return (xfrom - xto) * (xfrom - xto) + (yfrom - yto) * (yfrom - yto);
         }
 
         public static Vector2 Rotate(this Vector2 v, Vector2 origin, float angle)
@@ -138,30 +213,30 @@ namespace LeagueSandbox.GameServer
     public static class CustomConvert
     {
         private static PlayerManager _playerManager = Program.ResolveDependency<PlayerManager>();
-        public static TeamId ToTeamId(int i)
+        public static Team ToTeamId(int i)
         {
-            var dic = new Dictionary<int, TeamId>
+            var dic = new Dictionary<int, Team>
             {
-                { 0, TeamId.TEAM_BLUE },
-                { (int)TeamId.TEAM_BLUE, TeamId.TEAM_BLUE },
-                { 1, TeamId.TEAM_PURPLE },
-                { (int)TeamId.TEAM_PURPLE, TeamId.TEAM_PURPLE }
+                { 0, Team.Order },
+                { (int)Team.Order, Team.Order },
+                { 1, Team.Chaos },
+                { (int)Team.Chaos, Team.Chaos }
             };
 
             if (!dic.ContainsKey(i))
             {
-                return (TeamId)2;
+                return (Team)2;
             }
 
             return dic[i];
         }
 
-        public static int FromTeamId(TeamId team)
+        public static int FromTeamId(Team team)
         {
-            var dic = new Dictionary<TeamId, int>
+            var dic = new Dictionary<Team, int>
             {
-                { TeamId.TEAM_BLUE, 0 },
-                { TeamId.TEAM_PURPLE, 1 }
+                { Team.Order, 0 },
+                { Team.Chaos, 1 }
             };
 
             if (!dic.ContainsKey(team))
@@ -172,17 +247,17 @@ namespace LeagueSandbox.GameServer
             return dic[team];
         }
 
-        public static TeamId GetEnemyTeam(TeamId team)
+        public static Team GetEnemyTeam(Team team)
         {
-            var dic = new Dictionary<TeamId, TeamId>
+            var dic = new Dictionary<Team, Team>
             {
-                { TeamId.TEAM_BLUE, TeamId.TEAM_PURPLE },
-                { TeamId.TEAM_PURPLE, TeamId.TEAM_BLUE }
+                { Team.Order, Team.Chaos },
+                { Team.Chaos, Team.Order }
             };
 
             if (!dic.ContainsKey(team))
             {
-                return (TeamId)2;
+                return (Team)2;
             }
 
             return dic[team];

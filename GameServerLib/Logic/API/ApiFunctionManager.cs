@@ -8,6 +8,7 @@ using LeagueSandbox.GameServer.Logic.Packets;
 using System.Linq;
 using LeagueSandbox.GameServer.Logic.Scripting;
 using System.Numerics;
+using LeagueSandbox.GameServer.GameObjects;
 
 namespace LeagueSandbox.GameServer.Logic.API
 {
@@ -29,34 +30,35 @@ namespace LeagueSandbox.GameServer.Logic.API
             _game = game;
         }
 
-        public static void TeleportTo(Unit unit, float x, float y)
+        public static void TeleportTo(Obj_AI_Base unit, float x, float y)
         {
-            var coords = new Vector2(x, y);
-            var truePos = _game.Map.AIMesh.getClosestTerrainExit(coords);
-            _game.PacketNotifier.NotifyTeleport(unit, truePos.X, truePos.Y);
+            var coords = new Vector3(x, y, 0);
+            //var truePos = _game.Map.AIMesh.getClosestTerrainExit(coords);
+            //_game.PacketNotifier.NotifyTeleport(unit, truePos.X, truePos.Y);
         }
 
         public static bool IsWalkable(float x, float y)
         {
-            return _game.Map.IsWalkable(x, y);
+            return true;
         }
 
-        public static void AddBuff(string buffName, float duration, int stacks, Unit onto, Unit from)
+        public static void AddBuff(string buffName, float duration, int stacks, Obj_AI_Base onto, Obj_AI_Base from)
         {
-            var buff = new Buff(_game, buffName, duration, stacks, onto, from);
-            onto.AddBuff(buff);
-            _game.PacketNotifier.NotifyAddBuff(buff);
+           //var buff = new BuffInstance(_game, buffName, duration, stacks, onto, from);
+           //onto.AddBuff(buff);
+           //_game.PacketNotifier.NotifyAddBuff(buff);
         }
 
-        public static void AddParticle(Champion champion, string particle, float toX, float toY, float size = 1.0f, string bone = "")
+        public static void AddParticle(Obj_AI_Hero champion, string particle, float toX, float toY, float size = 1.0f, string bone = "")
         {
-            var t = new Target(toX, toY);
-            _game.PacketNotifier.NotifyParticleSpawn(new Particle(champion, t, particle, size, bone));
+            var t = new CastInfo(champion, null, new Vector3(toX, toY, 0), new Vector3(0,0,0));
+            _game.PacketNotifier.NotifyParticleSpawn(new Particle(t, particle, size, bone));
         }
 
-        public static void AddParticleTarget(Champion champion, string particle, Target target, float size = 1.0f, string bone = "")
+        public static void AddParticleTarget(Obj_AI_Hero champion, string particle, Obj_AI_Base target, float size = 1.0f, string bone = "")
         {
-            _game.PacketNotifier.NotifyParticleSpawn(new Particle(champion, target, particle, size, bone));
+            var t = new CastInfo(champion, target, new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+            _game.PacketNotifier.NotifyParticleSpawn(new Particle(t, particle, size, bone));
         }
 
         public static void PrintChat(string msg)
@@ -65,23 +67,24 @@ namespace LeagueSandbox.GameServer.Logic.API
             _game.PacketHandlerManager.broadcastPacket(dm, Channel.CHL_S2C);
         }
 
-        public static List<Unit> GetUnitsInRange(Target target, float range, bool isAlive)
+        public static List<Obj_AI_Base> GetUnitsInRange(Vector3 target, float range, bool isAlive)
         {
-            return _game.Map.GetUnitsInRange(target, range, isAlive);
+            //return _game.Map.GetUnitsInRange(target.X, target.Y, range, isAlive);
+            return null;
         }
 
-        public static List<Champion> GetChampionsInRange(Target target, float range, bool isAlive)
+        public static List<Obj_AI_Hero> GetChampionsInRange(Vector3 target, float range, bool isAlive)
         {
-            return _game.Map.GetChampionsInRange(target, range, isAlive);
+            //return _game.Map.GetChampionsInRange(target.X, target.Y, range, isAlive);
+            return null;
         }
 
-        public static void SetChampionModel(Champion champion, string model)
+        public static void SetChampionModel(Obj_AI_Hero champion, string model)
         {
             champion.Model = model;
         }
 
-        public static void DashToUnit(Unit unit,
-                                  Target target,
+        public static void DashToUnit(CastInfo castInfo,
                                   float dashSpeed,
                                   bool keepFacingLastDirection,
                                   string animation = null,
@@ -94,45 +97,40 @@ namespace LeagueSandbox.GameServer.Logic.API
             if (animation != null)
             {
                 var animList = new List<string> {"RUN", animation};
-                _game.PacketNotifier.NotifySetAnimation(unit, animList);
+                _game.PacketNotifier.NotifySetAnimation(castInfo.Caster, animList);
             }
 
-            if (target.IsSimpleTarget)
+            if (castInfo.Target != null)
             {
-                var newCoords = _game.Map.AIMesh.getClosestTerrainExit(new Vector2(target.X, target.Y));
-                var newTarget = new Target(newCoords);
-                unit.DashToTarget(newTarget, dashSpeed, followTargetMaxDistance, backDistance, travelTime);
+                //var newCoords = _game.Map.AIMesh.getClosestTerrainExit(castInfo.Caster.Position);
+                /*castInfo.Caster.DashToTarget(newCoords, dashSpeed, followTargetMaxDistance, backDistance, travelTime);
                 _game.PacketNotifier.NotifyDash(
-                    unit,
-                    newTarget,
+                    castInfo,
                     dashSpeed,
                     keepFacingLastDirection,
                     leapHeight,
                     followTargetMaxDistance,
                     backDistance,
                     travelTime
-                );
+                );*/
             }
             else
             {
-                unit.DashToTarget(target, dashSpeed, followTargetMaxDistance, backDistance, travelTime);
+                /*castInfo.Caster.DashToTarget(castInfo.Position, dashSpeed, followTargetMaxDistance, backDistance, travelTime);
                 _game.PacketNotifier.NotifyDash(
-                    unit,
-                    target,
+                    castInfo,
                     dashSpeed,
                     keepFacingLastDirection,
                     leapHeight,
                     followTargetMaxDistance,
                     backDistance,
                     travelTime
-                );
+                );*/
             }
-            unit.TargetUnit = null;
+            //castInfo.Caster.TargetUnit = null;
         }
 
-        public static void DashToLocation(Unit unit,
-                                 float x,
-                                 float y,
+        public static void DashToLocation(CastInfo castInfo,
                                  float dashSpeed,
                                  bool keepFacingLastDirection,
                                  string animation = null,
@@ -143,8 +141,7 @@ namespace LeagueSandbox.GameServer.Logic.API
                                  )
         {
             DashToUnit(
-                unit,
-                new Target(x, y),
+                castInfo,
                 dashSpeed,
                 keepFacingLastDirection,
                 animation,
@@ -155,12 +152,12 @@ namespace LeagueSandbox.GameServer.Logic.API
             );
         }
 
-        public static TeamId GetTeam(GameObject gameObject)
+        public static Team GetTeam(GameObject gameObject)
         {
             return gameObject.Team;
         }
 
-        public static bool IsDead(Unit unit)
+        public static bool IsDead(Obj_AI_Base unit)
         {
             return unit.IsDead;
         }
@@ -173,55 +170,40 @@ namespace LeagueSandbox.GameServer.Logic.API
 
         public static bool UnitIsChampion(GameObject unit)
         {
-            return unit is Champion;
+            return unit is Obj_AI_Hero;
         }
 
         public static bool UnitIsMinion(GameObject unit)
         {
-            return unit is Minion;
+            return unit is Obj_AI_Minion;
         }
 
         public static bool UnitIsTurret(GameObject unit)
         {
-            return unit is BaseTurret;
+            return unit is Obj_AI_Turret;
         }
 
-        public static bool UnitIsInhibitor(GameObject unit)
+        public static bool UnitIsBuilding(GameObject unit)
         {
-            return unit is Inhibitor;
-        }
-
-        public static bool UnitIsNexus(GameObject unit)
-        {
-            return unit is Nexus;
-        }
-
-        public static bool UnitIsPlaceable(GameObject unit)
-        {
-            return unit is Placeable;
-        }
-
-        public static bool UnitIsMonster(GameObject unit)
-        {
-            return unit is Monster;
+            return unit is Obj_Building;
         }
 
         public static void AddBaseFunctionToLuaScript(IScriptEngine scriptEngine)
         {
             if (scriptEngine == null)
                 return;
-            scriptEngine.RegisterFunction("setChampionModel", null, typeof(ApiFunctionManager).GetMethod("SetChampionModel", new Type[] { typeof(Champion), typeof(string) }));
-            scriptEngine.RegisterFunction("teleportTo", null, typeof(ApiFunctionManager).GetMethod("TeleportTo", new Type[] { typeof(Unit), typeof(float), typeof(float) }));
-            scriptEngine.RegisterFunction("addParticle", null, typeof(ApiFunctionManager).GetMethod("AddParticle", new Type[] { typeof(Champion), typeof(string), typeof(float), typeof(float), typeof(float), typeof(string) }));
-            scriptEngine.RegisterFunction("addParticleTarget", null, typeof(ApiFunctionManager).GetMethod("AddParticleTarget", new Type[] { typeof(Champion), typeof(string), typeof(Target), typeof(float), typeof(string) }));
-            scriptEngine.RegisterFunction("addBuff", null, typeof(ApiFunctionManager).GetMethod("AddBuff", new Type[] { typeof(string), typeof(float), typeof(int), typeof(Unit), typeof(Unit) }));
+            scriptEngine.RegisterFunction("setChampionModel", null, typeof(ApiFunctionManager).GetMethod("SetChampionModel", new Type[] { typeof(Obj_AI_Hero), typeof(string) }));
+            scriptEngine.RegisterFunction("teleportTo", null, typeof(ApiFunctionManager).GetMethod("TeleportTo", new Type[] { typeof(Obj_AI_Base), typeof(float), typeof(float) }));
+            scriptEngine.RegisterFunction("addParticle", null, typeof(ApiFunctionManager).GetMethod("AddParticle", new Type[] { typeof(Obj_AI_Hero), typeof(string), typeof(float), typeof(float), typeof(float), typeof(string) }));
+            scriptEngine.RegisterFunction("addParticleTarget", null, typeof(ApiFunctionManager).GetMethod("AddParticleTarget", new Type[] { typeof(Obj_AI_Hero), typeof(string), typeof(AttackableUnit), typeof(float), typeof(string) }));
+            scriptEngine.RegisterFunction("addBuff", null, typeof(ApiFunctionManager).GetMethod("AddBuff", new Type[] { typeof(string), typeof(float), typeof(int), typeof(Obj_AI_Base), typeof(Obj_AI_Base) }));
             scriptEngine.RegisterFunction("printChat", null, typeof(ApiFunctionManager).GetMethod("PrintChat", new Type[] { typeof(string) }));
-            scriptEngine.RegisterFunction("getUnitsInRange", null, typeof(ApiFunctionManager).GetMethod("GetUnitsInRange", new Type[] { typeof(Target), typeof(float), typeof(bool) }));
-            scriptEngine.RegisterFunction("getChampionsInRange", null, typeof(ApiFunctionManager).GetMethod("GetChampionsInRange", new Type[] { typeof(Target), typeof(float), typeof(bool) }));
-            scriptEngine.RegisterFunction("dashToLocation", null, typeof(ApiFunctionManager).GetMethod("DashToLocation", new Type[] { typeof(Unit), typeof(float), typeof(float), typeof(float), typeof(bool), typeof(string), typeof(float), typeof(float), typeof(float), typeof(float) }));
-            scriptEngine.RegisterFunction("dashToUnit", null, typeof(ApiFunctionManager).GetMethod("DashToUnit", new Type[] { typeof(Unit), typeof(Target), typeof(float), typeof(bool), typeof(string), typeof(float), typeof(float), typeof(float), typeof(float) }));
+            scriptEngine.RegisterFunction("getUnitsInRange", null, typeof(ApiFunctionManager).GetMethod("GetUnitsInRange", new Type[] { typeof(AttackableUnit), typeof(float), typeof(bool) }));
+            scriptEngine.RegisterFunction("getChampionsInRange", null, typeof(ApiFunctionManager).GetMethod("GetChampionsInRange", new Type[] { typeof(AttackableUnit), typeof(float), typeof(bool) }));
+            scriptEngine.RegisterFunction("dashToLocation", null, typeof(ApiFunctionManager).GetMethod("DashToLocation", new Type[] { typeof(Obj_AI_Base), typeof(float), typeof(float), typeof(float), typeof(bool), typeof(string), typeof(float), typeof(float), typeof(float), typeof(float) }));
+            scriptEngine.RegisterFunction("dashToUnit", null, typeof(ApiFunctionManager).GetMethod("DashToUnit", new Type[] { typeof(Obj_AI_Base), typeof(AttackableUnit), typeof(float), typeof(bool), typeof(string), typeof(float), typeof(float), typeof(float), typeof(float) }));
             scriptEngine.RegisterFunction("getTeam", null, typeof(ApiFunctionManager).GetMethod("GetTeam", new Type[] { typeof(GameObject) }));
-            scriptEngine.RegisterFunction("isDead", null, typeof(ApiFunctionManager).GetMethod("IsDead", new Type[] { typeof(Unit) }));
+            scriptEngine.RegisterFunction("isDead", null, typeof(ApiFunctionManager).GetMethod("IsDead", new Type[] { typeof(Obj_AI_Base) }));
             scriptEngine.RegisterFunction("sendPacket", null, typeof(ApiFunctionManager).GetMethod("SendPacket", new Type[] { typeof(string) }));
             scriptEngine.RegisterFunction("unitIsChampion", null, typeof(ApiFunctionManager).GetMethod("UnitIsChampion", new Type[] { typeof(GameObject) }));
             scriptEngine.RegisterFunction("unitIsMinion", null, typeof(ApiFunctionManager).GetMethod("UnitIsMinion", new Type[] { typeof(GameObject) }));

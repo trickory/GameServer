@@ -3,6 +3,7 @@ using LeagueSandbox.GameServer.Core.Logic.PacketHandlers;
 using LeagueSandbox.GameServer.Core.Logic.RAF;
 using LeagueSandbox.GameServer.Logic.Enet;
 using LeagueSandbox.GameServer.Logic.GameObjects;
+using LeagueSandbox.GameServer.GameObjects;
 using LeagueSandbox.GameServer.Logic.Packets;
 using System.Collections.Generic;
 
@@ -14,10 +15,10 @@ namespace LeagueSandbox.GameServer.Logic.Players
 
         private List<Pair<uint, ClientInfo>> _players = new List<Pair<uint, ClientInfo>>();
         private int _currentId = 1;
-        private Dictionary<TeamId, uint> _userIdsPerTeam = new Dictionary<TeamId, uint>
+        private Dictionary<Team, uint> _userIdsPerTeam = new Dictionary<Team, uint>
         {
-            { TeamId.TEAM_BLUE, 0 },
-            { TeamId.TEAM_PURPLE, 0 }
+            { Team.Order, 0 },
+            { Team.Chaos, 0 }
         };
 
         public PlayerManager(NetworkIdManager networkIdManager)
@@ -25,14 +26,14 @@ namespace LeagueSandbox.GameServer.Logic.Players
             _networkIdManager = networkIdManager;
         }
 
-        private TeamId GetTeamIdFromConfig(PlayerConfig p)
+        private Team GetTeamIdFromConfig(PlayerConfig p)
         {
             if (p.Team.ToLower() == "blue")
             {
-                return TeamId.TEAM_BLUE;
+                return Team.Order;
             }
 
-            return TeamId.TEAM_PURPLE;
+            return Team.Chaos;
         }
 
         public void AddPlayer(KeyValuePair<string, PlayerConfig> p)
@@ -54,12 +55,12 @@ namespace LeagueSandbox.GameServer.Logic.Players
                 _currentId // same as StartClient.bat
             );
             _currentId++;
-            var c = new Champion(p.Value.Champion, (uint)player.UserId, _userIdsPerTeam[teamId]++, p.Value.Runes, player);
-            c.SetTeam(teamId);
+            var c = new Obj_AI_Hero(p.Value.Champion, (uint)player.UserId, _userIdsPerTeam[teamId]++, p.Value.Runes, player);
+            c.Team = teamId;
 
-            var pos = c.GetSpawnPosition();
-            c.setPosition(pos.X, pos.Y);
-            c.LevelUp();
+            var pos = Extensions.GetSpawnPosition(c);
+            c.Position = pos;
+            //c.LevelUp();
 
             player.Champion = c;
             var pair = new Pair<uint, ClientInfo> {Item2 = player};
@@ -80,7 +81,7 @@ namespace LeagueSandbox.GameServer.Logic.Players
             return null;
         }
 
-        public ClientInfo GetClientInfoByChampion(Champion champ)
+        public ClientInfo GetClientInfoByChampion(Obj_AI_Hero champ)
         {
             return GetPlayers().Find(c => c.Item2.Champion == champ).Item2;
         }

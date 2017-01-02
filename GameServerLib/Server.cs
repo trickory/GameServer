@@ -3,26 +3,28 @@ using ENet;
 using LeagueSandbox.GameServer.Core.Logic;
 using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Logic;
+using LeagueSandbox.GameServer.GameObjects;
+using Ninject;
 
 namespace LeagueSandbox.GameServer
 {
-    class Server : IDisposable
+    public class Server : IDisposable
     {
         private string BLOWFISH_KEY = "17BLOhi6KZsTtldTsizvHg==";
         private uint SERVER_HOST = Address.IPv4HostAny;
-        private ushort SERVER_PORT = Program.ServerPort;
+        private ushort SERVER_PORT;
         private string SERVER_VERSION = "0.2.0";
         private Logger _logger;
         private ServerContext _serverContext;
         private Game _game;
         private Config _config;
+        private static StandardKernel _kernel;
 
         public Server(Logger logger, ServerContext serverContext, Game game)
         {
             _logger = logger;
             _serverContext = serverContext;
             _game = game;
-            _config = Config.LoadFromJson(Program.ConfigJson);
         }
 
         public void Start()
@@ -30,7 +32,13 @@ namespace LeagueSandbox.GameServer
             _logger.LogCoreInfo($"Yorick {SERVER_VERSION}");
             _logger.LogCoreInfo("Game started on port: {0}", SERVER_PORT);
             _game.Initialize(new Address(SERVER_HOST, SERVER_PORT), BLOWFISH_KEY, _config);
+            _game.PacketHandlerManager.OnHandleKeyCheck += PacketHandlerManager_OnHandleKeyCheck;
             _game.NetLoop();
+        }
+
+        private void PacketHandlerManager_OnHandleKeyCheck(Peer sender, HandlePacketArgs args)
+        {
+            Console.WriteLine("HAHAAH");
         }
 
         public void Dispose()

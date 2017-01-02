@@ -2,12 +2,10 @@
 using ENet;
 using LeagueSandbox.GameServer.Core.Logic.PacketHandlers;
 using LeagueSandbox.GameServer.Exceptions;
+using LeagueSandbox.GameServer.GameObjects;
 using LeagueSandbox.GameServer.Logic;
 using LeagueSandbox.GameServer.Logic.API;
-using LeagueSandbox.GameServer.Logic.Chatbox;
 using LeagueSandbox.GameServer.Logic.Content;
-using LeagueSandbox.GameServer.Logic.GameObjects;
-using LeagueSandbox.GameServer.Logic.Maps;
 using LeagueSandbox.GameServer.Logic.Packets;
 using LeagueSandbox.GameServer.Logic.Players;
 using System;
@@ -31,8 +29,7 @@ namespace LeagueSandbox.GameServer.Core.Logic
         private bool _autoResumeCheck;
 
         public int PlayersReady { get; private set; }
-
-        public Map Map { get; private set; }
+        
         public PacketNotifier PacketNotifier { get; private set; }
         public PacketHandlerManager PacketHandlerManager { get; private set; }
         public Config Config { get; protected set; }
@@ -42,21 +39,22 @@ namespace LeagueSandbox.GameServer.Core.Logic
         // Object managers
         private ItemManager _itemManager;
         // Other managers
-        private ChatCommandManager _chatCommandManager;
         private PlayerManager _playerManager;
         private NetworkIdManager _networkIdManager;
         private Stopwatch _lastMapDurationWatch;
+        
+        public delegate void Update(float sinceLastMapTime, EventArgs args);
+
+        public event Update OnUpdate;
 
         public Game(
             ItemManager itemManager,
-            ChatCommandManager chatCommandManager,
             NetworkIdManager networkIdManager,
             PlayerManager playerManager,
             Logger logger
         )
         {
             _itemManager = itemManager;
-            _chatCommandManager = chatCommandManager;
             _networkIdManager = networkIdManager;
             _playerManager = playerManager;
             _logger = logger;
@@ -66,8 +64,7 @@ namespace LeagueSandbox.GameServer.Core.Logic
         {
             _logger.LogCoreInfo("Loading Config.");
             Config = config;
-
-            _chatCommandManager.LoadCommands();
+            
             _server = new Host();
             _server.Create(address, 32, 32, 0, 0);
 
@@ -79,9 +76,7 @@ namespace LeagueSandbox.GameServer.Core.Logic
 
             Blowfish = new BlowFish(key);
             PacketHandlerManager = new PacketHandlerManager(_logger, Blowfish, _server, _playerManager);
-
-            RegisterMap((byte)Config.GameConfig.Map);
-
+            
             PacketNotifier = new PacketNotifier(this, _playerManager, _networkIdManager);
             ApiFunctionManager.SetGame(this);
             IsRunning = false;
@@ -102,28 +97,7 @@ namespace LeagueSandbox.GameServer.Core.Logic
 
             _logger.LogCoreInfo("Game is ready.");
         }
-
-        public void RegisterMap(byte mapId)
-        {
-            var mapName = $"{Config.ContentManager.GameModeName}-Map{mapId}";
-            var dic = new Dictionary<string, Type>
-            {
-                { "LeagueSandbox-Default-Map1", typeof(SummonersRift) },
-                // { "LeagueSandbox-Default-Map8", typeof(CrystalScar) },
-                { "LeagueSandbox-Default-Map10", typeof(TwistedTreeline) },
-                // { "LeagueSandbox-Default-Map11", typeof(NewSummonersRift) },
-                { "LeagueSandbox-Default-Map12", typeof(HowlingAbyss) },
-            };
-
-            if (!dic.ContainsKey(mapName))
-            {
-                Map = new SummonersRift(this);
-                return;
-            }
-
-            Map = (Map)Activator.CreateInstance(dic[mapName], this);
-        }
-
+        
         public void NetLoop()
         {
             var enetEvent = new Event();
@@ -156,26 +130,13 @@ namespace LeagueSandbox.GameServer.Core.Logic
                         }
                     }
 
-                    if (IsPaused)
-                    {
-                        _lastMapDurationWatch.Stop();
-                        _pauseTimer.Enabled = true;
-                        if (PauseTimeLeft <= 0 && !_autoResumeCheck)
-                        {
-                            PacketHandlerManager.GetHandler(PacketCmd.PKT_UnpauseGame, Channel.CHL_C2S)
-                                .HandlePacket(null, new byte[0]);
-                            _autoResumeCheck = true;
-                        }
-                        continue;
-                    }
-
                     if (_lastMapDurationWatch.Elapsed.TotalMilliseconds + 1.0 > REFRESH_RATE)
                     {
                         double sinceLastMapTime = _lastMapDurationWatch.Elapsed.TotalMilliseconds;
                         _lastMapDurationWatch.Restart();
                         if (IsRunning)
                         {
-                            Map.Update((float)sinceLastMapTime);
+                            OnUpdate((float)sinceLastMapTime, new EventArgs());
                         }
                     }
                     Thread.Sleep(1);
@@ -228,5 +189,181 @@ namespace LeagueSandbox.GameServer.Core.Logic
             }
             return true;
         }
+    }
+
+    public enum GameEventId
+    {
+        OnDelete,
+        OnSpawn,
+        OnDie,
+        OnKill,
+        OnChampionDie,
+        OnChampionLevelUp,
+        OnChampionKillPre,
+        OnChampionKill,
+        OnChampionKillPost,
+        OnChampionSingleKill,
+        OnChampionDoubleKill,
+        OnChampionTripleKill,
+        OnChampionQuadraKill,
+        OnChampionPentaKill,
+        OnChampionUnrealKill,
+        OnFirstBlood,
+        OnDamageTaken,
+        OnDamageGiven,
+        OnSpellCast1,
+        OnSpellCast2,
+        OnSpellCast3,
+        OnSpellCast4,
+        OnSpellAvatarCast1,
+        OnSpellAvatarCast2,
+        OnGoldSpent,
+        OnGoldEarned,
+        OnItemConsumeablePurchased,
+        OnCriticalStrike,
+        OnAce,
+        OnReincarnate,
+        OnChangeChampion,
+        OnDampenerKill,
+        OnDampenerDie,
+        OnDampenerRespawnSoon,
+        OnDampenerRespawn,
+        OnDampenerDamage,
+        OnTurretKill,
+        OnTurretDie,
+        OnTurretDamage,
+        OnMinionKill,
+        OnMinionDenied,
+        OnNeutralMinionKill,
+        OnSuperMonsterKill,
+        OnAcquireRedBuffFromNeutral,
+        OnAcquireBlueBuffFromNeutral,
+        OnHQKill,
+        OnHQDie,
+        OnHeal,
+        OnCastHeal,
+        OnBuff,
+        OnCrowdControlDealt,
+        OnKillingSpree,
+        OnKillingSpreeSet1,
+        OnKillingSpreeSet2,
+        OnKillingSpreeSet3,
+        OnKillingSpreeSet4,
+        OnKillingSpreeSet5,
+        OnKillingSpreeSet6,
+        OnKilledUnitOnKillingSpree,
+        OnKilledUnitOnKillingSpreeSet1,
+        OnKilledUnitOnKillingSpreeSet2,
+        OnKilledUnitOnKillingSpreeSet3,
+        OnKilledUnitOnKillingSpreeSet4,
+        OnKilledUnitOnKillingSpreeSet5,
+        OnKilledUnitOnKillingSpreeSet6,
+        OnKilledUnitOnKillingSpreeDoubleKill,
+        OnKilledUnitOnKillingSpreeTripleKill,
+        OnKilledUnitOnKillingSpreeQuadraKill,
+        OnKilledUnitOnKillingSpreePentaKill,
+        OnKilledUnitOnKillingSpreeUnrealKill,
+        OnDeathAssist,
+        OnQuit,
+        OnLeave,
+        OnReconnect,
+        OnGameStart,
+        OnAssistingSpreeSet1,
+        OnAssistingSpreeSet2,
+        OnChampionTripleAssist,
+        OnChampionPentaAssist,
+        OnPing,
+        OnPingPlayer,
+        OnPingBuilding,
+        OnPingOther,
+        OnEndGame,
+        OnSpellLevelup1,
+        OnSpellLevelup2,
+        OnSpellLevelup3,
+        OnSpellLevelup4,
+        OnSpellEvolve1,
+        OnSpellEvolve2,
+        OnSpellEvolve3,
+        OnSpellEvolve4,
+        OnItemPurchased,
+        OnItemSold,
+        OnItemRemoved,
+        OnItemUndo,
+        OnItemCallout,
+        OnItemGroupChange,
+        OnItemChange,
+        OnUndoEnabledChange,
+        OnShopItemSubstitutionChange,
+        OnShopMenuOpen,
+        OnShopMenuClose,
+        OnSurrenderVoteStart,
+        OnSurrenderVote,
+        OnSurrenderVoteAlready,
+        OnSurrenderFailedVotes,
+        OnSurrenderTooEarly,
+        OnSurrenderAgreed,
+        OnSurrenderSpam,
+        OnSurrenderEarlyAllowed,
+        OnEqualizeVoteStart,
+        OnEqualizeVote,
+        OnEqualizeVoteAlready,
+        OnEqualizeFailedVotes,
+        OnEqualizeTooEarly,
+        OnEqualizeNotEnoughGold,
+        OnEqualizeNotEnoughLevels,
+        OnEqualizeAgreed,
+        OnEqualizeSpam,
+        OnPause,
+        OnPauseResume,
+        OnMinionsSpawn,
+        OnStartGameMessage1,
+        OnStartGameMessage2,
+        OnStartGameMessage3,
+        OnStartGameMessage4,
+        OnStartGameMessage5,
+        OnAlert,
+        OnScoreboardOpen,
+        OnAudioEventFinished,
+        OnNexusCrystalStart,
+        OnCapturePointNeutralized_A,
+        OnCapturePointNeutralized_B,
+        OnCapturePointNeutralized_C,
+        OnCapturePointNeutralized_D,
+        OnCapturePointNeutralized_E,
+        OnCapturePointCaptured_A,
+        OnCapturePointCaptured_B,
+        OnCapturePointCaptured_C,
+        OnCapturePointCaptured_D,
+        OnCapturePointCaptured_E,
+        OnCapturePointFiveCap,
+        OnVictoryPointThreshold1,
+        OnVictoryPointThreshold2,
+        OnVictoryPointThreshold3,
+        OnVictoryPointThreshold4,
+        OnMinionKillVictoryThreshold1,
+        OnMinionKillVictoryThreshold2,
+        OnTurretKillVictoryThreshold1,
+        OnTurretKillVictoryThreshold2,
+        OnReplayFastForwardStart,
+        OnReplayFastForwardEnd,
+        OnReplayOnKeyframeFinished,
+        OnReplayDestroyAllObjects,
+        OnKillDragon,
+        OnKillDragon_Spectator,
+        OnKillDragonSteal,
+        OnKillWorm,
+        OnKillWorm_Spectator,
+        OnKillWormSteal,
+        OnKillSpiderBoss,
+        OnKillSpiderBoss_Spectator,
+        OnCaptureAltar,
+        OnCaptureAltar_Spectator,
+        OnPlaceWard,
+        OnKillWard,
+        OnMinionAscended,
+        OnChampionAscended,
+        OnClearAscended,
+        OnGameStatEvent,
+        OnRelativeTeamColorChange,
     }
 }

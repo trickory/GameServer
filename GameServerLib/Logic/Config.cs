@@ -21,6 +21,39 @@ namespace LeagueSandbox.GameServer.Logic
         public bool ChatCheatsEnabled { get; private set; }
         public bool MinionSpawnsEnabled { get; private set; }
 
+        public int GetTeamSize(string _playerIndex)
+        {
+            var _game = Program.ResolveDependency<Game>();
+            var blueTeamSize = 0;
+            var purpTeamSize = 0;
+
+            foreach (var player in Players.Values)
+            {
+                if (player.Team.ToLower() == "blue")
+                {
+                    blueTeamSize++;
+                }
+                else
+                {
+                    purpTeamSize++;
+                }
+            }
+
+            var playerIndex = _playerIndex;
+            if (_game.Config.Players.ContainsKey(playerIndex))
+            {
+                switch (_game.Config.Players[playerIndex].Team.ToLower())
+                {
+                    case "blue":
+                        return blueTeamSize;
+                    default:
+                        return purpTeamSize;
+                }
+            }
+
+            return 0;
+        }
+
         private Config()
         {
         }
@@ -116,9 +149,9 @@ namespace LeagueSandbox.GameServer.Logic
             _spawns = spawns;
         }
 
-        internal Vector2 GetCoordsForPlayer(int playerId)
+        internal Vector3 GetCoordsForPlayer(int playerId)
         {
-            return new Vector2((int)((JArray)_spawns[playerId])[0], (int)((JArray)_spawns[playerId])[1]);
+            return new Vector3((int)((JArray)_spawns[playerId])[0], (int)((JArray)_spawns[playerId])[1], 0);
         }
     }
 
