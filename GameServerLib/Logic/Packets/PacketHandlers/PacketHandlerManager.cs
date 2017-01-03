@@ -22,8 +22,14 @@ namespace LeagueSandbox.GameServer.Core.Logic
         private PlayerManager _playerManager;
 
         public delegate void HandleKeyCheck(Peer sender, HandlePacketArgs args);
+        public delegate void HandleQueryStatus(Peer sender, HandlePacketArgs args);
+        public delegate void HandleLoadPing(Peer sender, HandlePacketArgs args);
 
         public event HandleKeyCheck OnHandleKeyCheck;
+        public event HandleQueryStatus OnHandleQueryStatus;
+        public event HandleLoadPing OnHandleLoadPing;
+
+        
 
         public PacketHandlerManager(Logger logger, BlowFish blowfish, Host server, PlayerManager playerManager)
         {
@@ -61,7 +67,7 @@ namespace LeagueSandbox.GameServer.Core.Logic
             return null;
         }
 
-        public bool sendPacket(Peer peer, ENet.Packet packet, Channel channelNo, PacketFlags flag = PacketFlags.Reliable)
+        public bool sendPacket(Peer peer, GameServer.Logic.Packets.Packet packet, Channel channelNo, PacketFlags flag = PacketFlags.Reliable)
         {
             return sendPacket(peer, packet.GetBytes(), channelNo, flag);
         }
@@ -163,14 +169,25 @@ namespace LeagueSandbox.GameServer.Core.Logic
                     case PacketCmd.PKT_C2S_ViewReq:
                         break;
                     case PacketCmd.PKT_KeyCheck:
-                        Console.WriteLine("PKT_KeyCheck :(");
-                        HandleKeyCheck e = OnHandleKeyCheck;
-                        e?.Invoke(peer, packetArgs);
+                        HandleKeyCheck keyCheck = OnHandleKeyCheck;
+                        keyCheck?.Invoke(peer, packetArgs);
+                        break;
+                    case PacketCmd.PKT_C2S_Ping_Load_Info:
+                        HandleLoadPing loadPing = OnHandleLoadPing;
+                        loadPing?.Invoke(peer, packetArgs);
+                        break;
+                    case PacketCmd.PKT_C2S_QueryStatusReq:
+                        HandleQueryStatus queryStatus = OnHandleQueryStatus;
+                        queryStatus?.Invoke(peer, packetArgs);
+                        break;
+                    default:
+                        _logger.LogCoreWarning("Packet not Handled: " + header.cmd);
                         break;
                 }
 
                 printPacket(data, "Error: ");
             } catch (Exception e) { }
+            _logger.LogCoreWarning("Packet Handled: " + header.cmd);
             return true;
         }
 
