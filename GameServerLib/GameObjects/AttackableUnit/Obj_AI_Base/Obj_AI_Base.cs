@@ -17,7 +17,7 @@ namespace LeagueSandbox.GameServer.GameObjects
     public class Obj_AI_Base : AttackableUnit
     {
         protected IScriptEngine _scriptEngine = new LuaScriptEngine();
-        protected Logger _logger = GameServer.ResolveDependency<Logger>();
+        protected Logger _logger = Program.ResolveDependency<Logger>();
 
         public int AI_LastPetSpawnedId { get; set; }
         public float AttackCastDelay { get; set; }

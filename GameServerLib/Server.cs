@@ -12,7 +12,7 @@ namespace LeagueSandbox.GameServer
     {
         private string BLOWFISH_KEY = "17BLOhi6KZsTtldTsizvHg==";
         private uint SERVER_HOST = Address.IPv4HostAny;
-        private ushort SERVER_PORT;
+        private ushort SERVER_PORT = Program.ServerPort;
         private string SERVER_VERSION = "0.2.0";
         private Logger _logger;
         private ServerContext _serverContext;
@@ -25,6 +25,7 @@ namespace LeagueSandbox.GameServer
             _logger = logger;
             _serverContext = serverContext;
             _game = game;
+            _config = Config.LoadFromJson(Program.ConfigJson);
         }
 
         public void Start()
