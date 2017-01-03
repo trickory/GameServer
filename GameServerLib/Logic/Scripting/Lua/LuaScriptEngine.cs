@@ -49,7 +49,11 @@ namespace LeagueSandbox.GameServer.Logic.Scripting.Lua
 
         public void RunFunction(string function, params object[] args)
         {
-            _lua.GetFunction(function).Call(args);
+            var f = _lua.GetFunction(function);
+            if (f != null)
+            {
+                f.Call(args);
+            }
         }
         
         public void SetGlobalVariable(string name, object value)
