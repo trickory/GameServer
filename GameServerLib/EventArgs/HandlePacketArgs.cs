@@ -13,6 +13,7 @@ namespace LeagueSandbox.GameServer
         private PacketCmd packetCmd;
         private byte[] data;
         private Channel packetChannel;
+        private string wtf = "HI";
 
         public HandlePacketArgs(byte[] data, PacketCmd packetCmd, Channel packetChannel)
         {
@@ -26,6 +27,14 @@ namespace LeagueSandbox.GameServer
             get
             {
                 return data;
+            }
+        }
+
+        public string Wtf
+        {
+            get
+            {
+                return wtf;
             }
         }
 

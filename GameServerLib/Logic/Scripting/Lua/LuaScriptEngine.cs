@@ -16,6 +16,7 @@ namespace LeagueSandbox.GameServer.Logic.Scripting.Lua
         public LuaScriptEngine()
         {
             _lua = new NLua.Lua();
+            _lua.LoadCLRPackage();
         }
 
         public bool IsLoaded()

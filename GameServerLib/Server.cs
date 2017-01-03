@@ -40,12 +40,15 @@ namespace LeagueSandbox.GameServer
             _logger.LogCoreInfo("Game started on port: {0}", SERVER_PORT);
             _game.Initialize(new Address(SERVER_HOST, SERVER_PORT), BLOWFISH_KEY, _config);
             _scriptEngine = new LuaScriptEngine();
-            _scriptEngine.Load("whatever.lua");
-            _scriptEngine.RunFunction("onServerStart");
+            _scriptEngine.Load(Program.ExecutingDirectory + "/Content/Data/LeagueSandbox-Default/Server/GameServer.lua");
+            _scriptEngine.RunFunction("onServerStart", new object[] { _game, _logger, Program.ResolveDependency<PlayerManager>() });
             // Handle here every shit.
-            _game.PacketHandlerManager.OnHandleKeyCheck += PacketHandlerManager_OnHandleKeyCheck;
-            _game.PacketHandlerManager.OnHandleQueryStatus += PacketHandlerManager_OnHandleQueryStatus; ;
-            _game.PacketHandlerManager.OnHandleLoadPing += PacketHandlerManager_OnHandleLoadPing;
+            
+            //_game.PacketHandlerManager.OnHandleKeyCheck += PacketHandlerManager_OnHandleKeyCheck;
+            
+            //_game.PacketHandlerManager.OnHandleQueryStatus += PacketHandlerManager_OnHandleQueryStatus;
+            //_game.PacketHandlerManager.OnHandleLoadPing += PacketHandlerManager_OnHandleLoadPing;
+            
 
             _game.NetLoop();
         }
@@ -71,6 +74,7 @@ namespace LeagueSandbox.GameServer
 
         private void PacketHandlerManager_OnHandleKeyCheck(Peer peer, HandlePacketArgs args)
         {
+
             var _playerManager = Program.ResolveDependency<PlayerManager>();
             var keyCheck = new KeyCheck(args.Data);
             var userId = _game.Blowfish.Decrypt(keyCheck.checkId);

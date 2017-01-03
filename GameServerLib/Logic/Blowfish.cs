@@ -170,6 +170,7 @@ namespace BlowFishCS
         // a little hack for keycheck
         public long Decrypt(ulong key)
         {
+            Console.WriteLine("Decryping Key: " + key);
             lock (_blowfishLock)
             {
                 var bytes = BitConverter.GetBytes(key);
