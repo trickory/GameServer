@@ -40,13 +40,8 @@ namespace LeagueSandbox.GameServer
             _logger.LogCoreInfo("Game started on port: {0}", SERVER_PORT);
             _game.Initialize(new Address(SERVER_HOST, SERVER_PORT), BLOWFISH_KEY, _config);
             _scriptEngine = new LuaScriptEngine();
-<<<<<<< HEAD
             _scriptEngine.Load(Program.ExecutingDirectory + "/Content/Data/LeagueSandbox-Default/Server/GameServer.lua");
             _scriptEngine.RunFunction("onServerStart", new object[] { _game, _logger, Program.ResolveDependency<PlayerManager>() });
-=======
-            _scriptEngine.Load("whatever.lua");
-            _scriptEngine.RunFunction("onServerStart");
->>>>>>> 3de634e3ea2a8a246dec493e99c41700b617a508
             // Handle here every shit.
             
             //_game.PacketHandlerManager.OnHandleKeyCheck += PacketHandlerManager_OnHandleKeyCheck;
