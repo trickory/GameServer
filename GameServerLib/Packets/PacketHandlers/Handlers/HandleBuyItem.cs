@@ -1,0 +1,70 @@
+﻿using ENet;
+using LeagueSandbox.GameServer.Content;
+using LeagueSandbox.GameServer.Players;
+
+namespace LeagueSandbox.GameServer.Packets.PacketHandlers.Handlers
+{
+    class HandleBuyItem : IPacketHandler
+    {
+        private Game _game = Program.ResolveDependency<Game>();
+        private ItemManager _itemManager = Program.ResolveDependency<ItemManager>();
+        private PlayerManager _playerManager = Program.ResolveDependency<PlayerManager>();
+
+        public bool HandlePacket(Peer peer, byte[] data)
+        {
+            var request = new BuyItemReq(data);
+
+            var itemTemplate = _itemManager.SafeGetItemType(request.id);
+            if (itemTemplate == null)
+                return false;
+
+            var recipeParts = _playerManager.GetPeerInfo(peer).Champion
+                .getInventory()
+                .GetAvailableItems(itemTemplate.Recipe);
+            var price = itemTemplate.TotalPrice;
+            Item i;
+
+            if (recipeParts.Count == 0)
+            {
+                if (_playerManager.GetPeerInfo(peer).Champion.GetStats().Gold < price)
+                {
+                    return true;
+                }
+
+                i = _playerManager.GetPeerInfo(peer).Champion.getInventory().AddItem(itemTemplate);
+
+                if (i == null)
+                { // Slots full
+                    return false;
+                }
+            }
+            else
+            {
+                foreach (var instance in recipeParts)
+                    price -= instance.ItemType.TotalPrice;
+
+                if (_playerManager.GetPeerInfo(peer).Champion.GetStats().Gold < price)
+                    return false;
+
+
+                foreach (var instance in recipeParts)
+                {
+                    _playerManager.GetPeerInfo(peer).Champion.GetStats().RemoveBuff(instance.ItemType);
+                    var champion = _playerManager.GetPeerInfo(peer).Champion;
+                    var inventory = champion.getInventory();
+                    _game.PacketNotifier.NotifyRemoveItem(champion, inventory.GetItemSlot(instance), 0);
+                    inventory.RemoveItem(instance);
+                }
+
+                i = _playerManager.GetPeerInfo(peer).Champion.getInventory().AddItem(itemTemplate);
+            }
+
+            _playerManager.GetPeerInfo(peer).Champion.GetStats().Gold =
+                _playerManager.GetPeerInfo(peer).Champion.GetStats().Gold - price;
+            _playerManager.GetPeerInfo(peer).Champion.GetStats().AddBuff(itemTemplate);
+            _game.PacketNotifier.NotifyItemBought(_playerManager.GetPeerInfo(peer).Champion, i);
+
+            return true;
+        }
+    }
+}

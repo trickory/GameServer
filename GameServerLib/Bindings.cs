@@ -1,11 +1,10 @@
-using LeagueSandbox.GameServer.Core.Logic;
+using LeagueSandbox.GameServer.Chatbox;
+using LeagueSandbox.GameServer.Content;
 using LeagueSandbox.GameServer.Core.Logic.RAF;
-using LeagueSandbox.GameServer.Logic.Chatbox;
-using LeagueSandbox.GameServer.Logic.Content;
-using LeagueSandbox.GameServer.Logic.Packets;
-using LeagueSandbox.GameServer.Logic.Players;
-using LeagueSandbox.GameServer.Logic.Scripting;
-using LeagueSandbox.GameServer.Logic.Scripting.Lua;
+using LeagueSandbox.GameServer.Scripting;
+using LeagueSandbox.GameServer.Packets;
+using LeagueSandbox.GameServer.Players;
+using LeagueSandbox.GameServer.Scripting.Lua;
 using Ninject.Modules;
 
 namespace LeagueSandbox.GameServer

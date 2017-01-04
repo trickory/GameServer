@@ -1,7 +1,7 @@
 using System;
+using LeagueSandbox.GameServer.Content;
+using LeagueSandbox.GameServer.Items;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using LeagueSandbox.GameServer.Logic.Items;
-using LeagueSandbox.GameServer.Logic.Content;
 
 namespace LeagueSandbox.GameServerTests.Tests
 {

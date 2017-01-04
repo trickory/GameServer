@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BlowFishCS;
 using System.Text;
+using LeagueSandbox.GameServer;
 
 namespace LeagueSandbox.GameServerTests.Tests
 {

@@ -1,14 +1,12 @@
-﻿using LeagueSandbox.GameServer.Core.Logic.PacketHandlers;
-using LeagueSandbox.GameServer.Logic;
-using LeagueSandbox.GameServer.Logic.Enet;
-using LeagueSandbox.GameServer.Logic.Packets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 using System.Text;
-using LeagueSandbox.GameServer.Logic.Players;
+using LeagueSandbox.GameServer.Enet;
+using LeagueSandbox.GameServer.Packets;
+using LeagueSandbox.GameServer.Players;
 
 namespace LeagueSandbox.GameServer
 {
@@ -52,9 +50,9 @@ namespace LeagueSandbox.GameServer
             // Rotating (px,py) around (ox, oy) with angle a
             // p'x = cos(a) * (px-ox) - sin(a) * (py-oy) + ox
             // p'y = sin(a) * (px-ox) + cos(a) * (py-oy) + oy
-            angle = (float)-DegreeToRadian(angle);
-            var x = (float)(Math.Cos(angle) * (v.X - origin.X) - Math.Sin(angle) * (v.Y - origin.Y) + origin.X);
-            var y = (float)(Math.Sin(angle) * (v.X - origin.X) + Math.Cos(angle) * (v.Y - origin.Y) + origin.Y);
+            angle = (float) -DegreeToRadian(angle);
+            var x = (float) (Math.Cos(angle) * (v.X - origin.X) - Math.Sin(angle) * (v.Y - origin.Y) + origin.X);
+            var y = (float) (Math.Sin(angle) * (v.X - origin.X) + Math.Cos(angle) * (v.Y - origin.Y) + origin.Y);
             return new Vector2(x, y);
         }
 
@@ -108,6 +106,7 @@ namespace LeagueSandbox.GameServer
         {
             Add(new Pair<TKey, TValue>(key, value));
         }
+
         public bool ContainsKey(TKey key)
         {
             foreach (var v in this)
@@ -116,21 +115,30 @@ namespace LeagueSandbox.GameServer
 
             return false;
         }
+
         public TValue this[TKey key]
         {
             get
             {
                 foreach (var v in this)
+                {
                     if (v.Item1.Equals(key))
+                    {
                         return v.Item2;
+                    }
+                }
 
                 return default(TValue);
             }
             set
             {
                 foreach (var v in this)
+                {
                     if (v.Item1.Equals(key))
+                    {
                         v.Item2 = value;
+                    }
+                }
             }
         }
     }
@@ -138,30 +146,31 @@ namespace LeagueSandbox.GameServer
     public static class CustomConvert
     {
         private static PlayerManager _playerManager = Program.ResolveDependency<PlayerManager>();
-        public static TeamId ToTeamId(int i)
+
+        public static Team ToTeamId(int i)
         {
-            var dic = new Dictionary<int, TeamId>
+            var dic = new Dictionary<int, Team>
             {
-                { 0, TeamId.TEAM_BLUE },
-                { (int)TeamId.TEAM_BLUE, TeamId.TEAM_BLUE },
-                { 1, TeamId.TEAM_PURPLE },
-                { (int)TeamId.TEAM_PURPLE, TeamId.TEAM_PURPLE }
+                {0, Team.Order},
+                {(int) Team.Order, Team.Order},
+                {1, Team.Chaos},
+                {(int) Team.Chaos, Team.Chaos}
             };
 
             if (!dic.ContainsKey(i))
             {
-                return (TeamId)2;
+                return (Team) 2;
             }
 
             return dic[i];
         }
 
-        public static int FromTeamId(TeamId team)
+        public static int FromTeamId(Team team)
         {
-            var dic = new Dictionary<TeamId, int>
+            var dic = new Dictionary<Team, int>
             {
-                { TeamId.TEAM_BLUE, 0 },
-                { TeamId.TEAM_PURPLE, 1 }
+                {Team.Order, 0},
+                {Team.Chaos, 1}
             };
 
             if (!dic.ContainsKey(team))
@@ -172,17 +181,17 @@ namespace LeagueSandbox.GameServer
             return dic[team];
         }
 
-        public static TeamId GetEnemyTeam(TeamId team)
+        public static Team GetEnemyTeam(Team team)
         {
-            var dic = new Dictionary<TeamId, TeamId>
+            var dic = new Dictionary<Team, Team>
             {
-                { TeamId.TEAM_BLUE, TeamId.TEAM_PURPLE },
-                { TeamId.TEAM_PURPLE, TeamId.TEAM_BLUE }
+                {Team.Order, Team.Chaos},
+                {Team.Chaos, Team.Order}
             };
 
             if (!dic.ContainsKey(team))
             {
-                return (TeamId)2;
+                return (Team) 2;
             }
 
             return dic[team];

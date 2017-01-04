@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using LeagueSandbox.GameServer.Logic.Chatbox;
-using LeagueSandbox.GameServer.Logic.Chatbox.Commands;
+﻿using LeagueSandbox.GameServer.Chatbox;
+using LeagueSandbox.GameServer.Chatbox.Commands;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LeagueSandbox.GameServerTests.Tests
 {

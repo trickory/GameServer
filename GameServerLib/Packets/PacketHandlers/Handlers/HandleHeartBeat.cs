@@ -1,0 +1,32 @@
+﻿using ENet;
+using LeagueSandbox.GameServer.Players;
+
+namespace LeagueSandbox.GameServer.Packets.PacketHandlers.Handlers
+{
+    class HandleHeartBeat : IPacketHandler
+    {
+        private Logger _logger = Program.ResolveDependency<Logger>();
+        private PlayerManager _playerManager = Program.ResolveDependency<PlayerManager>();
+
+        public bool HandlePacket(Peer peer, byte[] data)
+        {
+            var heartbeat = new HeartBeat(data);
+
+            float diff = heartbeat.ackTime - heartbeat.receiveTime;
+            if (heartbeat.receiveTime > heartbeat.ackTime)
+            {
+                _logger.LogCoreWarning(string.Format(
+                    "Player {0} sent an invalid heartbeat - Timestamp error (diff: {1})",
+                    _playerManager.GetPeerInfo(peer).UserId,
+                    diff
+                ));
+            }
+            else
+            {
+              //  Logger.LogCoreInfo("Player %d sent heartbeat (diff: %.f)", peerInfo(peer)->userId, diff);
+            }
+
+            return true;
+        }
+    }
+}

@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using LeagueSandbox.GameServer.Logic.API;
+﻿using LeagueSandbox.GameServer.API;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LeagueSandbox.GameServerTests.Tests
 {

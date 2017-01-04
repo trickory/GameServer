@@ -1,8 +1,6 @@
 ﻿using System;
 using ENet;
-using LeagueSandbox.GameServer.Core.Logic;
 using LeagueSandbox.GameServer.Logic.GameObjects;
-using LeagueSandbox.GameServer.Logic;
 
 namespace LeagueSandbox.GameServer
 {
@@ -35,7 +33,6 @@ namespace LeagueSandbox.GameServer
 
         public void Dispose()
         {
-            PathNode.DestroyTable();
         }
     }
 }
