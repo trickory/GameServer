@@ -1,6 +1,4 @@
-﻿using LeagueSandbox.GameServer.Logic.GameObjects;
-
-namespace LeagueSandbox.GameServer.Stats
+﻿namespace LeagueSandbox.GameServer.Stats
 {
     public class Stat
     {

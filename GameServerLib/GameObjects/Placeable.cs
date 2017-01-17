@@ -1,5 +1,4 @@
-﻿using LeagueSandbox.GameServer.Logic.GameObjects;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace LeagueSandbox.GameServer.GameObjects
 {

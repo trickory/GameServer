@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LeagueSandbox.GameServer.API;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Packets.PacketHandlers;
 using LeagueSandbox.GameServer.Scripting;
 using LeagueSandbox.GameServer.Scripting.Lua;

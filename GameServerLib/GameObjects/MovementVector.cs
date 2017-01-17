@@ -1,6 +1,4 @@
-﻿using LeagueSandbox.GameServer.Logic.GameObjects;
-
-namespace LeagueSandbox.GameServer.GameObjects
+﻿namespace LeagueSandbox.GameServer.GameObjects
 {
     public class MovementVector
     {

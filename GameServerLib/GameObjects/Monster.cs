@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Numerics;
 using LeagueSandbox.GameServer.Enet;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 using Newtonsoft.Json.Linq;
 
 namespace LeagueSandbox.GameServer.GameObjects

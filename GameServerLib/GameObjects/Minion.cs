@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 using LeagueSandbox.GameServer.Logic;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Stats;
 
 namespace LeagueSandbox.GameServer.GameObjects

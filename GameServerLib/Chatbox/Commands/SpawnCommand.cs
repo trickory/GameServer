@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 using ENet;
-using LeagueSandbox.GameServer.Core.Logic;
 using LeagueSandbox.GameServer.Enet;
 using LeagueSandbox.GameServer.GameObjects;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Players;
 
 namespace LeagueSandbox.GameServer.Chatbox.Commands

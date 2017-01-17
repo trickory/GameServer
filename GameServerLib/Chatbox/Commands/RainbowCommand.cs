@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ENet;
-using LeagueSandbox.GameServer.Core.Logic;
 using LeagueSandbox.GameServer.Enet;
 using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Packets;

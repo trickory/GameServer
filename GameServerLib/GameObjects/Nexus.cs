@@ -1,5 +1,4 @@
 ﻿using LeagueSandbox.GameServer.Enet;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Stats;
 
 namespace LeagueSandbox.GameServer.GameObjects

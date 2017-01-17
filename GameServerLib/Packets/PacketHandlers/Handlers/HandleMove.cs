@@ -4,7 +4,6 @@ using System.IO;
 using System.Numerics;
 using ENet;
 using LeagueSandbox.GameServer.GameObjects;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 using LeagueSandbox.GameServer.Maps;
 using LeagueSandbox.GameServer.Players;
 

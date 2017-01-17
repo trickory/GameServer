@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LeagueSandbox.GameServer.Content;
 using LeagueSandbox.GameServer.GameObjects;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 
 namespace LeagueSandbox.GameServer.Items
 {

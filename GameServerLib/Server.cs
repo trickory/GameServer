@@ -1,6 +1,5 @@
 ﻿using System;
 using ENet;
-using LeagueSandbox.GameServer.Logic.GameObjects;
 
 namespace LeagueSandbox.GameServer
 {
