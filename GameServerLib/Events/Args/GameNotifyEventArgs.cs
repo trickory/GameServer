@@ -3,7 +3,7 @@ using LeagueSandbox.GameServer.Enums;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GameNotifyEventArgs : EventArgs
+    public class GameNotifyEventArgs : EventArgs
     {
         public GameEventId EventId { get; private set; }
         public uint NetworkId { get; private set; }

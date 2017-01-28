@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GameObjectNewPathEventArgs : EventArgs
+    public class GameObjectNewPathEventArgs : EventArgs
     {
         public Vector3[] Path { get; private set; }
         public float Speed { get; private set; }

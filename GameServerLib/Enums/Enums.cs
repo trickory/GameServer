@@ -172,12 +172,12 @@
 
     public enum CollisionFlags : short
     {
-        None = 0,
-        Grass = 1,
-        Wall = 2,
-        Building = 64,
-        Prop = 128,
-        GlobalVision = 256
+        None = 0x0,
+        Grass = 0x1,
+        Wall = 0x2,
+        Building = 0x40,
+        Prop = 0x80,
+        GlobalVision = 0x100
     }
 
     public enum DamageHitType
@@ -420,26 +420,26 @@
 
     public enum GameObjectCharacterState
     {
-        CanAttack = 1,
-        CanCast = 2,
-        CanMove = 4,
-        Immovable = 8,
-        IsStealth = 16,
-        RevealSpecificUnit = 32,
-        Taunted = 64,
-        Feared = 128,
-        Fleeing = 256,
-        Surpressed = 512,
-        Asleep = 1024,
-        NearSight = 2048,
-        Ghosted = 4096,
-        GhostProof = 8192,
-        Charmed = 16384,
-        NoRender = 32768,
-        DodgePiercing = 131072,
-        DisableAmbientGold = 262144,
-        DisableAmbientXP = 524288,
-        ForceRenderParticles = 65536
+        CanAttack = 0x1,
+        CanCast = 0x2,
+        CanMove = 0x4,
+        Immovable = 0x8,
+        IsStealth = 0x10,
+        RevealSpecificUnit = 0x20,
+        Taunted = 0x40,
+        Feared = 0x80,
+        Fleeing = 0x100,
+        Surpressed = 0x200,
+        Asleep = 0x400,
+        NearSight = 0x800,
+        Ghosted = 0x1000,
+        GhostProof = 0x2000,
+        Charmed = 0x4000,
+        NoRender = 0x8000,
+        DodgePiercing = 0x20000,
+        DisableAmbientGold = 0x40000,
+        DisableAmbientXP = 0x80000,
+        ForceRenderParticles = 0x10000
     }
 
     public enum GameObjectCombatType
@@ -450,14 +450,14 @@
 
     public enum GameObjectOrder
     {
-        HoldPosition = 1,
-        MoveTo = 2,
-        AttackUnit = 3,
-        AutoAttackPet = 4,
-        AutoAttack = 5,
-        MovePet = 6,
-        AttackTo = 7,
-        Stop = 10
+        HoldPosition = 0x1,
+        MoveTo = 0x2,
+        AttackUnit = 0x3,
+        AutoAttackPet = 0x4,
+        AutoAttack = 0x5,
+        MovePet = 0x6,
+        AttackTo = 0x7,
+        Stop = 0xA
     }
 
     public enum GameObjectTeam
@@ -802,9 +802,204 @@
 
     public enum MasteryPage
     {
-        Offense = 116,
-        Defense = 117,
-        Utility = 118
+        Offense = 0x74,
+        Defense = 0x75,
+        Utility = 0x76
+    }
+
+    public enum PacketCallbackType
+    {
+        Send,
+        Receive,
+        BothWays
+    }
+
+    public enum PacketChannel
+    {
+        Handshake,
+        C2S,
+        GamePlay,
+        S2C,
+        LowPriority,
+        Communication,
+        LoadingScreen
+    }
+
+    public enum PacketProtocolFlags
+    {
+        Reliable,
+        NoFlags,
+        Unsequenced
+    }
+
+    public enum ParType
+    {
+        Mana,
+        Energy,
+        None,
+        Shield,
+        BattleFury,
+        Rage,
+        Heat,
+        GnarFury,
+        Ferocity,
+        BloodWell,
+        Wind,
+        Other
+    }
+
+    public enum PingCategory
+    {
+        Normal = 0,
+        Danger = 2,
+        EnemyMissing = 3,
+        OnMyWay = 4,
+        Fallback = 5,
+        AssistMe = 6
+    }
+
+    public enum PingType
+    {
+        Normal = 1,
+        Danger = 2,
+        EnemyMissing = 3,
+        OnMyWay = 4,
+        Fallback = 5,
+        AssistMe = 6,
+    }
+
+    public enum QuestType
+    {
+        Primary,
+        Secondary,
+        Objective
+    }
+
+    public enum SpellDataFlags : uint
+    {
+        Autocast = 0x2,
+        Instacast = 0x4,
+        PersistThroughDeath = 0x8,
+        NonDispellable = 0x10,
+        AffectImportantBotTargets = 0x40,
+        AllowWhileTaunted = 0x80,
+        NotAffectZombie = 0x100,
+        AffectUntargetable = 0x200,
+        AffectEnemies = 0x400,
+        AffectFriends = 0x800,
+        AffectBuildings = 0x1000,
+        NotAffectSelf = 0x2000,
+        AffectNeutral = 0x4000,
+        AffectMinions = 0x8000,
+        AffectHeroes = 0x10000,
+        AffectTurrets = 0x20000,
+        AlwaysSelf = 0x40000,
+        AffectDead = 0x80000,
+        AffectNotPet = 0x100000,
+        AffectBarrackOnly = 0x200000,
+        AffectWards = 0x4000000,
+        AffectUseable = 0x8000000
+    }
+
+    public enum SpellDataTargetType
+    {
+        Self = 0,
+        Unit = 1,
+        LocationAoe = 2,
+        Cone = 3,
+        SelfAoe = 4,
+        SelfAndUnit = 5,
+        Location = 6,
+        Location2 = 7,
+        LocationVector = 8,
+        LocationSummon = 10,
+        Location3 = 11,
+        LocationTunnel = 12
+    }
+
+    public enum SpellFlags
+    {
+        Autocast = 0x2,
+        Instacast = 0x4,
+        PersistThroughDeath = 0x8,
+        NonDispellable = 0x10,
+        AffectImportantBotTargets = 0x40,
+        AllowWhileTaunted = 0x80,
+        AffectUntargetable = 0x200,
+        AffectEnemies = 0x400,
+        AffectFriends = 0x800,
+        AffectBuildings = 0x1000,
+        NotAffectSelf = 0x2000,
+        AffectNeutral = 0x4000,
+        AffectMinions = 0x8000,
+        AffectHeroes = 0x10000,
+        AffectTurrets = 0x20000,
+        AlwaysSelf = 0x40000,
+        AffectDead = 0x80000,
+        AffectNotPet = 0x100000,
+        AffectBarrackOnly = 0x200000,
+        NonTargetableAlly = 0x800000
+    }
+
+    public enum SpellSlot
+    {
+        Unknown = -1,
+        Q = 0,
+        W = 1,
+        E = 2,
+        R = 3,
+        Summoner1 = 4,
+        Summoner2 = 5,
+        Item1 = 6,
+        Item2 = 7,
+        Item3 = 8,
+        Item4 = 9,
+        Item5 = 10,
+        Item6 = 11,
+        Trinket = 12,
+        Recall = 13,
+        OathSworn = 92,
+        CapturePoint = 94,
+        Internal = 10000
+    }
+
+    public enum SpellState
+    {
+        Ready = 0x0,
+        NotAvailable = 0x4,
+        Surpressed = 0x8,
+        NotLearned = 0xC,
+        Disabled = 0x18,
+        Cooldown = 0x20,
+        NoMana = 0x60,
+        Unknown = 0x61
+    }
+
+    public enum SpellStateFlags
+    {
+        Ready = 0x0,
+        NotLearned = 0x4,
+        Supressed = 0x8,
+        Cooldown = 0x20,
+        NoMana = 0x40
+    }
+
+    public enum SurrenderVoteType
+    {
+        Yes = 1,
+        No = 2
+    }
+
+    public enum WardType
+    {
+        StealthWard,
+        VisionWard,
+        WrigglesLantern,
+        WardingTotem,
+        GreaterTotem,
+        GreaterStealthTotem,
+        GreaterVisionTotem,
+        Unknown
     }
 
 

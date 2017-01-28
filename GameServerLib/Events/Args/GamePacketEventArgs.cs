@@ -1,10 +1,10 @@
 ﻿using System;
+using LeagueSandbox.GameServer.Enums;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GamePacketEventArgs : EventArgs
+    public class GamePacketEventArgs : EventArgs
     {
-        public bool Process { get; private set; }
         public GamePacket GamePacket { get; private set; }
         public PacketProtocolFlags ProtocolFlag { get; private set; }
         public PacketChannel Channel { get; private set; }
@@ -22,7 +22,6 @@ namespace LeagueSandbox.GameServer.Events.Args
             RawPacketData = rawPacketData;
             Channel = channel;
             ProtocolFlag = flag;
-            Process = true;
         }
     }
 }

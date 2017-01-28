@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using LeagueSandbox.GameServer.Enums;
 
 namespace LeagueSandbox.GameServer.NewGameObjects
 {

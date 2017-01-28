@@ -38,5 +38,15 @@ namespace LeagueSandbox.GameServer.Events
     public delegate void Obj_AI_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args);
     public delegate void Obj_AI_UpdateModel(Obj_AI_Base sender, UpdateModelEventArgs args);
     public delegate void Obj_AI_UpdatePosition(Obj_AI_Base sender, Obj_AI_UpdatePositionEventArgs args);
+    public delegate void HeroPostIssueOrder(Obj_AI_Base sender, HeroIssueOrderEventArgs args);
+    public delegate void Hero_DoEmote(AIHeroClient sender, HeroDoEmoteEventArgs args);
+    public delegate void Hero_ProcessIssueOrder(Obj_AI_Base sender, HeroIssueOrderEventArgs args);
+    public delegate void Hero_SwapItem(AIHeroClient sender, HeroSwapItemEventArgs args);
+    public delegate void ShopBuyItem(AIHeroClient sender, ShopActionEventArgs args);
+    public delegate void ShopSellItem(AIHeroClient sender, ShopActionEventArgs args);
+    public delegate void SpellbookCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args);
+    public delegate void SpellbookPostCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args);
+    public delegate void SpellbookStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args);
+    public delegate void SpellbookUpdateChargeableSpell(Spellbook sender, SpellbookUpdateChargeableSpellEventArgs args);
 
 }

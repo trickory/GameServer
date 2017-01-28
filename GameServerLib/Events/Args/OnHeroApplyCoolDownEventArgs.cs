@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeagueSandbox.GameServer.Enums;
 using LeagueSandbox.GameServer.NewGameObjects;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class OnHeroApplyCoolDownEventArgs : EventArgs
+    public class OnHeroApplyCooldownEventArgs : EventArgs
     {
         public float End { get; private set; }
         public float Start { get; private set; }
@@ -15,7 +16,7 @@ namespace LeagueSandbox.GameServer.Events.Args
         public SpellDataInst SpellData { get; private set; }
         public AIHeroClient Sender { get; private set; }
 
-        public OnHeroApplyCoolDownEventArgs(float end, float start, SpellSlot slot, SpellDataInst sData, AIHeroClient sender)
+        public OnHeroApplyCooldownEventArgs(float end, float start, SpellSlot slot, SpellDataInst sData, AIHeroClient sender)
         {
             End = end;
             Start = start;

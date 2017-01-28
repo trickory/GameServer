@@ -2,7 +2,7 @@
 
 namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class CharData
+    public class CharData
     {
         public int UnitTags { get; private set; }
         public float AttaGameplayCollisionRadiusckRange { get; private set; }

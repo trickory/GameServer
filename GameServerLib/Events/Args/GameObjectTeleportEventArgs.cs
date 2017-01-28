@@ -2,7 +2,7 @@
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GameObjectTeleportEventArgs : EventArgs
+    public class GameObjectTeleportEventArgs : EventArgs
     {
         public string RecallType { get; private set; }
         public string RecallName { get; private set; }

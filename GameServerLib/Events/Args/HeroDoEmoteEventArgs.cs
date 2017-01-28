@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeagueSandbox.GameServer.Enums;
 using LeagueSandbox.GameServer.NewGameObjects;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    public class Obj_AI_BaseBuffLoseEventArgs : EventArgs
+    public class HeroDoEmoteEventArgs : EventArgs
     {
-        public BuffInstance Buff { get; private set; }
+        public Emote EmoteId { get; private set; }
 
-        public Obj_AI_BaseBuffLoseEventArgs(BuffInstance buff)
+        public HeroDoEmoteEventArgs(AIHeroClient sender, short emoteId)
         {
-            Buff = buff;
+            EmoteId = (Emote)emoteId;
         }
     }
 }

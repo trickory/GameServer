@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeagueSandbox.GameServer.Enums;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class Obj_AI_BaseSurrenderVoteEventArgs : EventArgs
+    public class Obj_AI_BaseSurrenderVoteEventArgs : EventArgs
     {
         public SurrenderVoteType Type { get; private set; }
 

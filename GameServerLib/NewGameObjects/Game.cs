@@ -1,4 +1,7 @@
-﻿namespace LeagueSandbox.GameServer.NewGameObjects
+﻿using LeagueSandbox.GameServer.Enums;
+using LeagueSandbox.GameServer.Events;
+
+namespace LeagueSandbox.GameServer.NewGameObjects
 {
     class Game
     {
@@ -17,13 +20,11 @@
         public int TicksPerSecond { get; private set; }
         public float Time { get; private set; }
         public static event GameNotify OnNotify;
-        public static event GameDisconnect OnDisconnect;
         public static event GameAfk OnAfk;
         public static event GamePostTick OnPostTick;
         public static event GameTick OnTick;
         public static event GamePreTick OnPreTick;
         public static event GameProcessPacket OnProcessPacket;
-        public static event GameLoad OnLoad;
         public static event GameEnd OnEnd;
         public static event GameUpdate OnUpdate;
     }

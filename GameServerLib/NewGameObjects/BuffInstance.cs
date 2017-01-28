@@ -1,6 +1,8 @@
-﻿namespace LeagueSandbox.GameServer.NewGameObjects
+﻿using LeagueSandbox.GameServer.Enums;
+
+namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class BuffInstance
+    public class BuffInstance
     {
         public bool IsVisible { get; private set; }
         public int CountAlt { get; private set; }

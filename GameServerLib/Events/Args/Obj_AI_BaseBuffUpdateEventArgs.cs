@@ -7,7 +7,7 @@ using LeagueSandbox.GameServer.NewGameObjects;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class Obj_AI_BaseBuffUpdateEventArgs : EventArgs
+    public class Obj_AI_BaseBuffUpdateEventArgs : EventArgs
     {
         public BuffInstance Buff { get; private set; }
 

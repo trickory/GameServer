@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Numerics;
+using LeagueSandbox.GameServer.Enums;
 using LeagueSandbox.GameServer.NewGameObjects;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GameObjectProcessSpellCastEventArgs : EventArgs
+    public class GameObjectProcessSpellCastEventArgs : EventArgs
     {
-        public bool Process { get; private set; }
         public bool IsToggle { get; private set; }
         public GameObject Target { get; private set; }
         public int CastedSpellCount { get; private set; }
@@ -28,7 +28,6 @@ namespace LeagueSandbox.GameServer.Events.Args
             CastedSpellCount = castedSpellCount;
             Slot = slot;
             IsToggle = isToggle;
-            Process = true;
         }
     }
 }

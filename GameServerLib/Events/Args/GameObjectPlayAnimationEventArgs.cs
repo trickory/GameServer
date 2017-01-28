@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GameObjectPlayAnimationEventArgs : EventArgs
+    public class GameObjectPlayAnimationEventArgs : EventArgs
     {
         private Dictionary<int, string> _animationsHashDictionary = new Dictionary<int, string>
         {
@@ -53,7 +53,6 @@ namespace LeagueSandbox.GameServer.Events.Args
             { -0x4909C14C, "Spell5" },
             { -0x6A5D5EB1, "Spell3withReload" }
         };
-        public bool Process { get; private set; }
 
         public string Animation
         {

@@ -1,6 +1,8 @@
-﻿namespace LeagueSandbox.GameServer.NewGameObjects
+﻿using LeagueSandbox.GameServer.Enums;
+
+namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class Mastery
+    public class Mastery
     {
         public byte Id { get; private set; }
         public MasteryPage Page { get; private set; }

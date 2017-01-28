@@ -2,10 +2,11 @@
 using System.Collections.Specialized;
 using System.Numerics;
 using LeagueSandbox.GameServer.Enums;
+using LeagueSandbox.GameServer.Events;
 
 namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class Obj_AI_Base : AttackableUnit
+    public class Obj_AI_Base : AttackableUnit
     {
         public Vector3 FearLeashPoint { get; private set; }
         public Vector3 LastPausePosition { get; private set; }

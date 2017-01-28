@@ -1,8 +1,9 @@
 ﻿using System.Numerics;
+using LeagueSandbox.GameServer.Events;
 
 namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class AttackableUnit : GameObject
+    public class AttackableUnit : GameObject
     {
         public float PathfindingCollisionRadius { get; private set; }
         public float OverrideCollisionRadius { get; private set; }

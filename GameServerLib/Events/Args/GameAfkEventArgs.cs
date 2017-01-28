@@ -2,13 +2,7 @@
 
 namespace LeagueSandbox.GameServer.Events
 {
-    class GameAfkEventArgs : EventArgs
+    public class GameAfkEventArgs : EventArgs
     {
-        public bool Process { get; private set; }
-
-        public GameAfkEventArgs()
-        {
-            Process = false;
-        }
     }
 }

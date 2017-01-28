@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class Obj_AI_BaseLevelUpEventArgs : EventArgs
+    public class Obj_AI_BaseLevelUpEventArgs : EventArgs
     {
         public int Level { get; private set; }
 

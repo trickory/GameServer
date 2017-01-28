@@ -1,8 +1,9 @@
 ﻿using System;
+using LeagueSandbox.GameServer.Enums;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class GameEndEventArgs : EventArgs
+    public class GameEndEventArgs : EventArgs
     {
         public GameObjectTeam LosingTeam { get; private set; }
         public GameObjectTeam WinningTeam { get; private set; }

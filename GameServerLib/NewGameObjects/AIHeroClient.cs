@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using LeagueSandbox.GameServer.Enums;
 using LeagueSandbox.GameServer.Events;
 
 namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class AIHeroClient : Obj_AI_Base
+    public class AIHeroClient : Obj_AI_Base
     {
         public int WardsPlaced { get; private set; }
         public int WardsKilled { get; private set; }

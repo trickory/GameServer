@@ -1,6 +1,8 @@
-﻿namespace LeagueSandbox.GameServer.NewGameObjects
+﻿using LeagueSandbox.GameServer.Enums;
+
+namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class InventorySlot
+    public class InventorySlot
     {
         public bool IsWard { get; private set; }
         public SpellSlot SpellSlot { get; private set; }

@@ -1,6 +1,6 @@
 ﻿namespace LeagueSandbox.GameServer.NewGameObjects
 {
-    class Experience
+    public class Experience
     {
         public float XPNextLevelVisual { get; private set; }
         public float XPPercentage { get; private set; }

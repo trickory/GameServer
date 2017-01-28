@@ -1,9 +1,10 @@
 ﻿using System;
+using LeagueSandbox.GameServer.Enums;
 using LeagueSandbox.GameServer.NewGameObjects;
 
 namespace LeagueSandbox.GameServer.Events.Args
 {
-    class AttackableUnitDamageEventArgs : EventArgs
+    public class AttackableUnitDamageEventArgs : EventArgs
     {
         public DamageHitType HitType { get; private set; }
         public DamageType Type { get; private set; }
