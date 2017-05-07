@@ -73,6 +73,7 @@ namespace LeagueSandbox.GameServer.Logic.API
         public static EventOnUpdate OnUpdate = new EventOnUpdate();
         public static EventOnChampionDamageTaken OnChampionDamageTaken = new EventOnChampionDamageTaken();
         public static EventOnUnitDamageTaken OnUnitDamageTaken = new EventOnUnitDamageTaken();
+        public static EventOnAutoAttack OnAutoAttack = new EventOnAutoAttack();
     }
 
 
@@ -96,6 +97,30 @@ namespace LeagueSandbox.GameServer.Logic.API
             });
         }
     }
+
+    public class EventOnAutoAttack
+    {
+        private List<Tuple<object, Action<Unit, Unit>>> listeners = new List<Tuple<object, Action<Unit, Unit>>>();
+        public void AddListener(object owner, Action<Unit, Unit> callback)
+        {
+            var listenerTuple = new Tuple<object, Action<Unit, Unit>>(owner, callback);
+            listeners.Add(listenerTuple);
+        }
+        public void RemoveListener(object owner)
+        {
+            listeners.RemoveAll((listener) => listener.Item1 == owner);
+        }
+        public void Publish(Unit owner, Unit target)
+        {
+            listeners.ForEach((listener) => {
+                if (listener.Item1 == owner)
+                {
+                    listener.Item2(owner, target);
+                }
+            });
+        }
+    }
+
 
     public class EventOnUnitDamageTaken
     {
