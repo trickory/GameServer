@@ -85,6 +85,7 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
         private float _statUpdateTimer;
         private uint _autoAttackProjId;
         public MoveOrder MoveOrder { get; set; }
+        
 
         public List<BuffGameScriptController> BuffGameScriptControllers { get; private set; }
 
@@ -426,8 +427,7 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
                 damage *= stats.getCritDamagePct();
             }
 
-            var onAutoAttack = _scriptEngine.GetStaticMethod<Action<Unit, Unit>>(Model, "Passive", "OnAutoAttack");
-            onAutoAttack?.Invoke(this, target);
+            ApiEventManager.OnAutoAttack.Publish(this, target);
 
             DealDamageTo(target, damage, DamageType.DAMAGE_TYPE_PHYSICAL,
                                              DamageSource.DAMAGE_SOURCE_ATTACK,
