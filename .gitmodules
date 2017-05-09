@@ -2,6 +2,4 @@
 	path = GameServerApp/Content/Data/LeagueSandbox-Default
 	url = https://github.com/trickory/LeagueSandbox-Default.git
 	branch = indev
-[submodule "GameServerApp/Content/Data/GameServerApp/Content/Data"]
-	path = GameServerApp/Content/Data/GameServerApp/Content/Data
-	url = https://github.com/trickory/LeagueSandbox-Default.git
+
