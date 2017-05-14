@@ -91,6 +91,7 @@ namespace LeagueSandbox.GameServer.Logic.GameObjects
             }
 
             spellGameScript.OnStartCasting(Owner, this, Target);
+            ApiEventManager.OnSpellCast.Publish(Owner, this, Target);
 
             if (SpellData.GetCastTime() > 0 && (SpellData.Flags & (int)SpellFlag.SPELL_FLAG_InstantCast) == 0)
             {
