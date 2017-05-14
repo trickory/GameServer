@@ -124,10 +124,10 @@ namespace LeagueSandbox.GameServer.Logic.API
 
     public class EventOnSpellCast
     {
-        private List<Tuple<object, Spell, Unit, Action<object, Spell, Unit>>> listeners = new List<Tuple<object, Spell, Unit, Action<object, Spell, Unit>>>();
-        public void AddListener(object owner, Spell spell, Unit unit, Action<object, Spell, Unit> callback)
+        private List<Tuple<object, Action<object, Spell, Unit>>> listeners = new List<Tuple<object, Action<object, Spell, Unit>>>();
+        public void AddListener(object owner, Action<object, Spell, Unit> callback)
         {
-            var listenerTuple = new Tuple<object, Spell, Unit, Action<object, Spell, Unit>>(owner, spell, unit, callback);
+            var listenerTuple = new Tuple<object, Action<object, Spell, Unit>>(owner, callback);
             listeners.Add(listenerTuple);
         }
         public void RemoveListener(object owner)
@@ -137,7 +137,7 @@ namespace LeagueSandbox.GameServer.Logic.API
         public void Publish(object owner, Spell spell, Unit unit)
         {
             listeners.ForEach((listener) => {
-                listener.Item4(owner, spell, unit);
+                listener.Item2(owner, spell, unit);
             });
         }
     }
