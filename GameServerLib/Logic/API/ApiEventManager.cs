@@ -137,7 +137,10 @@ namespace LeagueSandbox.GameServer.Logic.API
         public void Publish(object owner, Spell spell, Unit unit)
         {
             listeners.ForEach((listener) => {
-                listener.Item2(owner, spell, unit);
+                if (listener.Item1 == owner)
+                {
+                    listener.Item2(owner, spell, unit);
+                }
             });
         }
     }
